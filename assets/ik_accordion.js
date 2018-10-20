@@ -34,27 +34,28 @@
 		
 		$elem.attr({
 			'id': id,
-			 'role': 'region' // add the accordion to the landmarked regions
+			'role': 'region' // add the accordion to the landmarked regions
 		}).addClass('ik_accordion');
 		
 		$elem.attr({'aria-multiselectable': !this.options.autoCollapse}); // define if more than one panel can be expanded
-
-		this.headers = $elem.children('dt').attr({'role': 'heading'}); // set heading role for each accordion header
 		
+		this.headers = $elem.children('dt')
+        .attr({'role': 'heading'}); // set heading role for each accordion header
+			
 		this.headers = $elem.children('dt').each(function(i, el) {
 			var $me, $btn;
 			
 			$me = $(el);
 			$btn = $('<div/>').attr({
-          'id': id + '_btn_' + i,
-				'role': 'button',
+	          'id': id + '_btn_' + i,
+	           'role': 'button',
                 'aria-controls': id + '_panel_' + i, // associate button with corresponding panel
                 'aria-expanded': false, // toggle expanded state
                 'tabindex': 0 //add keyboard focus
         })
         .addClass('button')
         .html($me.html())
-         .on('keydown', {'plugin': plugin}, plugin.onKeyDown) // enable keyboard navigation
+        .on('keydown', {'plugin': plugin}, plugin.onKeyDown) // enable keyboard navigation
         .on('click', {'plugin': plugin}, plugin.togglePanel);
         
 			$me.empty().append($btn); // wrap content of each header in an element with role button
@@ -64,8 +65,8 @@
 			var $me = $(this), id = $elem.attr('id') + '_panel_' + i;
 			$me.attr({
 				'id': id,
-				  'role': 'region', // add the accordion to the landmarked regions
-				 'aria-hidden': true, // mark all panels as hidden
+               'role': 'region', // add role region to each panel
+                'aria-hidden': true, // mark all panels as hidden
                 'tabindex': 0 // add panels into the tab order
 			});
 		}).hide();
@@ -95,21 +96,41 @@
 				
 				$hdr = $(el);
 				$btn = $hdr.find('.button');
-				
+//				alert ($btn[0].id);
+//				alert ($(event.currentTarget)[0].id)
 				if($btn[0] != $(event.currentTarget)[0]) { 
-					$btn.removeClass('expanded');
+					$btn
+					.removeClass('expanded')
+					.attr({'aria-expanded': false});
 					$hdr.next().slideUp(plugin.options.animationSpeed);
 				} else { 
-					$btn.addClass('expanded');
+//					alert ($btn.id);
+//					alert("hi");
+					$btn
+					.addClass('expanded')
+					.attr({'aria-expanded': true});
+					isVisible = !!$panel.is(':visible');
+					$panel
+					.attr({'aria-hidden': isVisible});
 					$hdr.next().slideDown(plugin.options.animationSpeed);
 				}
 			});
 			
 		} else { // toggle current panel depending on the state
-		
+//			console.log($panel[0].id);
 			isVisible = !!$panel.is(':visible');
-			$panel.slideToggle({ duration: plugin.options.animationSpeed });
+//			console.log(isVisible);
+//		// showing is false, hiding is true
+//			console.log($me[0].id);			
+//			var $todd;
+//			$todd = $(event.currentTarget)[0];
 			
+			$me
+			.attr({'aria-expanded': !isVisible});
+			$panel
+			.attr({'aria-hidden': isVisible});
+			
+			$panel.slideToggle({ duration: plugin.options.animationSpeed });
 		}
 	};
 	
@@ -124,7 +145,7 @@
 			
 		});
 		
-	}
+	};
 	
 	/**
      * Handles kedown event on header button.
@@ -170,5 +191,6 @@
                 break;
         }
     };
+	
  
 })( jQuery, window, document );
