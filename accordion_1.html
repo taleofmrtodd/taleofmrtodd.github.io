@@ -16,7 +16,7 @@
 				
 				$(".multiselect").ik_accordion();
 				$(".singleselect").ik_accordion({ 'autoCollapse': true});
-				
+				$elem.attr({'aria-multiselectable': !this.options.autoCollapse}); // define if more than one panel can be expanded
 			});
 			
 		</script>

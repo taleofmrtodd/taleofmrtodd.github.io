@@ -5,6 +5,8 @@ ik_utils.keys =  {
 	'enter': 13,
 	'esc': 27,
 	'space': 32,
+	'home': 36,
+	'end': 35,
 	'left': 37,
 	'up': 38,
 	'right': 39,
